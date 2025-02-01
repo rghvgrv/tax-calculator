@@ -1,12 +1,19 @@
 /* General Styles */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 .App {
   font-family: Arial, sans-serif;
   text-align: center;
   margin-top: 50px;
   padding: 20px;
-  background-color: #f9f9f9;
+  background-color: #f7f7f7;
   border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
   max-width: 800px;
   margin-left: auto;
   margin-right: auto;

@@ -12,6 +12,7 @@ const TaxCalculator = () => {
   const [isSalaried, setIsSalaried] = useState(true);
   const [marginalSalary, setMarginalSalary] = useState(0);
   const [showTaxFreeMessage, setShowTaxFreeMessage] = useState(false);
+  const [showDeductionMessage, setShowDeductionMessage] = useState(false);
 
   const formatINR = (amount) => {
     return amount.toLocaleString('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 });
@@ -115,6 +116,8 @@ const TaxCalculator = () => {
       (totalIncome <= 1275000 && isSalaried) || (!isSalaried && totalIncome <= 1200000)
     );
 
+    setShowDeductionMessage(isSalaried && totalIncome > 75000);
+
     setFullIncome(parseFloat(income));
   };
 
@@ -161,10 +164,12 @@ const TaxCalculator = () => {
               <td colSpan="2"><strong>Your Income </strong></td>
               <td><strong>{formatINR(fullIncome)}</strong></td>
             </tr>
+            {showDeductionMessage && (
           <tr>
               <td colSpan="2"><strong>Your Taxable Income (Total Income - Standard Deduction) </strong></td>
               <td><strong>{formatINR(taxableIncome)}</strong></td>
             </tr>
+            )}
             <tr>
               <th>Income Range</th>
               <th>Tax Rate</th>
