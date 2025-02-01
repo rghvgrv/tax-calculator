@@ -72,6 +72,10 @@ const TaxCalculator = () => {
       {tax !== null && (
         <table>
           <thead>
+          <tr>
+              <td colSpan="2"><strong>Your Taxable Income (Total Income - Standard Deduction) </strong></td>
+              <td><strong>{formatINR(taxableIncome)}</strong></td>
+            </tr>
             <tr>
               <th>Income Range</th>
               <th>Tax Rate</th>
@@ -116,19 +120,19 @@ const TaxCalculator = () => {
             </tr>
             <tr>
               <td colSpan="2"><strong>Cess (4%)</strong></td>
-              <td><strong>₹{cess.toFixed(2)}</strong></td>
+              <td><strong>{formatINR(cess)}</strong></td>
             </tr>
             <tr>
               <td colSpan="2"><strong>Total Tax </strong></td>
-              <td><strong>₹{taxPayable.toFixed(2)}</strong></td>
+              <td><strong>{formatINR(taxPayable)}</strong></td>
             </tr>
             <tr>
               <td colSpan="2"><strong>Total Tax Payable (Total Tax + Cess)</strong></td>
-              <td><strong>₹{tax.toFixed(2)}</strong></td>
+              <td><strong>{formatINR(tax)}</strong></td>
             </tr>
             <tr style = {{ color: 'green', border: '2px solid black' }}>
               <td colSpan="2"><strong>Tax After Deduction</strong> (If income ≤ ₹12.75L, tax is ₹0)</td>
-              <td><strong>₹{income <= 1275000 ? 0 : tax.toFixed(2)}</strong></td>
+              <td><strong>{formatINR(income <= 1275000 ? 0 : tax)}</strong></td>
             </tr>
           </tbody>
         </table>
