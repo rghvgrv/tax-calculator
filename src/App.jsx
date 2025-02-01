@@ -8,6 +8,7 @@ const TaxCalculator = () => {
   const [cess, setCess] = useState(null);
   const [taxPayable, setTaxPayable] = useState(null);
   const [error, setError] = useState('');
+  const [isSalaried, setIsSalaried] = useState(true);
 
   const formatINR = (amount) => {
     return amount.toLocaleString('en-IN', { style: 'currency', currency: 'INR' });
@@ -24,8 +25,8 @@ const TaxCalculator = () => {
       return;
     }
 
-    const standardDeduction = 75000;
-    const calculatedTaxableIncome = totalIncome - standardDeduction;
+    const standardDeduction = isSalaried ? 75000 : 0;
+    const calculatedTaxableIncome = parseInt(income) > 75000  ? totalIncome - standardDeduction : 0;
     setTaxableIncome(calculatedTaxableIncome);
 
     let taxPayable = 0;
@@ -58,6 +59,28 @@ const TaxCalculator = () => {
   return (
     <div className="App">
       <h1>Income Tax Calculator 2025-26</h1>
+      <div style={{ display: 'flex', justifyContent: 'space-evenly'}}>
+      <label style={{display: 'flex', alignItems: 'center'}}>
+          <input
+            type="radio"
+            name="employmentType"
+            value="salaried"
+            checked={isSalaried}
+            onChange={() => setIsSalaried(true)}
+          />
+          Salaried
+        </label>
+        <label style={{display: 'flex', alignItems: 'center'}}>
+          <input
+            type="radio"
+            name="employmentType"
+            value="nonSalaried"
+            checked={!isSalaried}
+            onChange={() => setIsSalaried(false)}
+          />
+          Non&nbsp;Salaried
+        </label>
+      </div>
       <input
         id="salary"
         type="number"
@@ -130,10 +153,10 @@ const TaxCalculator = () => {
               <td colSpan="2"><strong>Total Tax Payable (Total Tax + Cess)</strong></td>
               <td><strong>{formatINR(tax)}</strong></td>
             </tr>
-            <tr style = {{ color: 'green', border: '2px solid black' }}>
+            {parseInt(income) <= 1275000 && (<tr style = {{ color: 'green', border: '2px solid green' }}>
               <td colSpan="2"><strong>Tax After Deduction</strong> (If income ≤ ₹12.75L, tax is ₹0)</td>
               <td><strong>{formatINR(income <= 1275000 ? 0 : tax)}</strong></td>
-            </tr>
+            </tr>)}
           </tbody>
         </table>
       )}
