@@ -13,6 +13,21 @@ const TaxCalculator = () => {
   const formatINR = (amount) => {
     return amount.toLocaleString('en-IN', { style: 'currency', currency: 'INR' });
   };
+
+  const formatToINR = (value) => {
+    if (!value) return "";
+    const numericValue = value.replace(/[^0-9]/g, ""); // Remove non-numeric characters
+    return Number(numericValue).toLocaleString("en-IN", {
+      style: "currency",
+      currency: "INR",
+      maximumFractionDigits: 0,
+    });
+  };
+
+  const handleChange = (e) => {
+    const rawValue = e.target.value.replace(/[^0-9]/g, ""); // Allow only numbers
+    setIncome(rawValue);
+  };
   
   // Function to calculate tax
   const calculateTax = () => {
@@ -83,9 +98,9 @@ const TaxCalculator = () => {
       </div>
       <input
         id="salary"
-        type="number"
-        value={income}
-        onChange={(e) => setIncome(e.target.value)}
+        type="text"
+        value={formatToINR(income)}
+        onChange={handleChange}
         placeholder="Enter your salary"
       />
       <button onClick={calculateTax}>Calculate Tax</button>
