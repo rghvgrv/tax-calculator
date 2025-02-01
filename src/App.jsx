@@ -57,7 +57,7 @@ const TaxCalculator = () => {
 
   return (
     <div className="App">
-      <h1>Income Tax Calculator</h1>
+      <h1>Income Tax Calculator 2025-26</h1>
       <input
         id="salary"
         type="number"
