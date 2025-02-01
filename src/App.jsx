@@ -3,15 +3,18 @@ import './App.css';
 
 const TaxCalculator = () => {
   const [income, setIncome] = useState('');
+  const [fullIncome,setFullIncome] = useState(0);
   const [tax, setTax] = useState(null);
   const [taxableIncome, setTaxableIncome] = useState(null);
   const [cess, setCess] = useState(null);
   const [taxPayable, setTaxPayable] = useState(null);
   const [error, setError] = useState('');
   const [isSalaried, setIsSalaried] = useState(true);
+  const [marginalSalary, setMarginalSalary] = useState(0);
+  const [showTaxFreeMessage, setShowTaxFreeMessage] = useState(false);
 
   const formatINR = (amount) => {
-    return amount.toLocaleString('en-IN', { style: 'currency', currency: 'INR' });
+    return amount.toLocaleString('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 });
   };
 
   const formatToINR = (value) => {
@@ -26,17 +29,23 @@ const TaxCalculator = () => {
 
   const handleChange = (e) => {
     const rawValue = e.target.value.replace(/[^0-9]/g, ""); // Allow only numbers
+    if (rawValue > 5000000) {
+      alert("Are you kidding me? 😂 , Contact your CA for this !!!");
+      setIncome(""); // Reset input
+      return;
+    }
     setIncome(rawValue);
   };
   
   // Function to calculate tax
   const calculateTax = () => {
     const totalIncome = parseFloat(income);
-
+    
     if (isNaN(totalIncome) || totalIncome <= 0) {
       setError('Please enter a valid income');
       setTax(null);
       setTaxableIncome(null);
+      setShowTaxFreeMessage(false);
       return;
     }
 
@@ -61,14 +70,52 @@ const TaxCalculator = () => {
     } else {
       taxPayable = 400000 * 0.05 + 400000 * 0.10 + 400000 * 0.15 + 400000 * 0.20 + 400000 * 0.25 + (calculatedTaxableIncome - 2400000) * 0.30;
     }
-    setTaxPayable(taxPayable);
-    const cess = taxPayable * 0.04;
-    setCess(cess);
 
-    const totalTax = taxPayable + cess;
+    let differenceAmount = totalIncome - taxPayable;
 
-    setTax(totalTax);
-    setError('');
+    if(differenceAmount <= 1275000 & totalIncome > 1275000 & isSalaried){ 
+      let extraAmount = totalIncome - 1275000;
+      setTaxPayable(extraAmount);
+      setMarginalSalary(taxPayable - extraAmount);
+
+      const cess = extraAmount * 0.04;
+      setCess(cess);
+
+      const totalTax = extraAmount + cess;
+      setTax(totalTax);
+      setIncome('');
+      setError('');
+    }
+    else if(differenceAmount <= 1200000 & totalIncome > 1200000 & !isSalaried){
+      let extraAmount = totalIncome - 1200000;
+      setTaxPayable(extraAmount);
+      setMarginalSalary(taxPayable - extraAmount);
+
+      const cess = extraAmount * 0.04;
+      setCess(cess);
+
+      const totalTax = extraAmount + cess;
+      setTax(totalTax);
+      setIncome('');
+      setError('');
+    }
+    else{
+      setTaxPayable(taxPayable);
+      setMarginalSalary(0);
+
+      const cess = taxPayable * 0.04;
+      setCess(cess);
+  
+      const totalTax = taxPayable + cess; 
+      setTax(totalTax);
+      setIncome('');
+      setError('');
+    }
+    setShowTaxFreeMessage(
+      (totalIncome <= 1275000 && isSalaried) || (!isSalaried && totalIncome <= 1200000)
+    );
+
+    setFullIncome(parseFloat(income));
   };
 
   return (
@@ -110,6 +157,10 @@ const TaxCalculator = () => {
       {tax !== null && (
         <table>
           <thead>
+          <tr>
+              <td colSpan="2"><strong>Your Income </strong></td>
+              <td><strong>{formatINR(fullIncome)}</strong></td>
+            </tr>
           <tr>
               <td colSpan="2"><strong>Your Taxable Income (Total Income - Standard Deduction) </strong></td>
               <td><strong>{formatINR(taxableIncome)}</strong></td>
@@ -157,24 +208,40 @@ const TaxCalculator = () => {
               <td>{formatINR(Math.max(0, taxableIncome - 2400000) * 0.30)}</td>
             </tr>
             <tr>
-              <td colSpan="2"><strong>Cess (4%)</strong></td>
-              <td><strong>{formatINR(cess)}</strong></td>
+              <td colSpan="2"><strong>Marginal Relief </strong></td>
+              <td><strong>{formatINR(marginalSalary)}</strong></td>
             </tr>
             <tr>
               <td colSpan="2"><strong>Total Tax </strong></td>
               <td><strong>{formatINR(taxPayable)}</strong></td>
             </tr>
             <tr>
+              <td colSpan="2"><strong>Cess (4%)</strong></td>
+              <td><strong>{formatINR(cess)}</strong></td>
+            </tr>
+            <tr>
               <td colSpan="2"><strong>Total Tax Payable (Total Tax + Cess)</strong></td>
               <td><strong>{formatINR(tax)}</strong></td>
+            </tr>        
+            {showTaxFreeMessage && (
+            <tr>
+              <td colSpan="3" style={{ color: 'green', border: '2px solid green', textAlign: 'center' }}>
+                <strong>Congrats 🎉</strong> You have to pay 0 Tax
+              </td>
             </tr>
-            {parseInt(income) <= 1275000 && (<tr style = {{ color: 'green', border: '2px solid green' }}>
-              <td colSpan="2"><strong>Tax After Deduction</strong> (If income ≤ ₹12.75L, tax is ₹0)</td>
-              <td><strong>{formatINR(income <= 1275000 ? 0 : tax)}</strong></td>
-            </tr>)}
+          )}
           </tbody>
         </table>
       )}
+      <div style={{ marginTop: '20px', fontSize: '14px', color: 'gray' }}>
+        <ul style={{ paddingLeft: '20px' }}>
+        <strong>Disclaimer:</strong><br></br>
+          This assumes you're an Indian resident below 60 years of age, who uses the New Tax Regime.<br></br>
+          The calculations may not be accurate - use at your own risk.<br></br>
+          This tool runs entirely in your browser. No data is stored or shared, and we do not use analytics.<br></br>
+          If your income is over ₹50 LPA,Hoping you have a CA to help you out.<br></br>
+        </ul>
+      </div>
     </div>
   );
 };
