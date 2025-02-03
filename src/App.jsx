@@ -124,6 +124,7 @@ const TaxCalculator = () => {
 
   return (
     <div className="App">
+      <Analytics />
       <h1>Income Tax Calculator 2025-26</h1>
       <div style={{ display: 'flex', justifyContent: 'space-evenly'}}>
       <label style={{display: 'flex', alignItems: 'center'}}>
