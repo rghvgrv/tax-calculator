@@ -7,6 +7,7 @@ const TaxCalculator = () => {
   const [fullIncome,setFullIncome] = useState(0);
   const [tax, setTax] = useState(null);
   const [taxableIncome, setTaxableIncome] = useState(null);
+  const [surCharge, setSurcharge] = useState(null);  
   const [cess, setCess] = useState(null);
   const [taxPayable, setTaxPayable] = useState(null);
   const [error, setError] = useState('');
@@ -31,11 +32,11 @@ const TaxCalculator = () => {
 
   const handleChange = (e) => {
     const rawValue = e.target.value.replace(/[^0-9]/g, ""); // Allow only numbers
-    if (rawValue > 5000000) {
-      alert("Are you kidding me? 😂 , Contact your CA for this !!!");
-      setIncome(""); // Reset input
-      return;
-    }
+    // if (rawValue > 9000000) {
+    //   alert("Are you kidding me? 😂 , Contact your CA for this !!!");
+    //   setIncome(""); // Reset input
+    //   return;
+    // }
     setIncome(rawValue);
   };
   
@@ -72,18 +73,37 @@ const TaxCalculator = () => {
     } else {
       taxPayable = 400000 * 0.05 + 400000 * 0.10 + 400000 * 0.15 + 400000 * 0.20 + 400000 * 0.25 + (calculatedTaxableIncome - 2400000) * 0.30;
     }
-
+    let surCharge = 0;
+    if(totalIncome >= 5000000 & totalIncome< 10000000){
+      surCharge = parseInt(taxPayable) * 0.1;
+      setSurcharge(surCharge);
+    }
+    else if(totalIncome >= 10000000 & totalIncome < 20000000){
+      surCharge = parseInt(taxPayable) * 0.15;
+      setSurcharge(surCharge);
+    }
+    else if(totalIncome >= 20000000 & totalIncome < 50000000){
+      surCharge = parseInt(taxPayable) * 0.25;
+      setSurcharge(surCharge);
+    }
+    else if(totalIncome >= 50000000){
+      surCharge = parseInt(taxPayable) * 0.37;
+      setSurcharge(surCharge);
+    }
+    else{
+      setSurcharge(surCharge)
+    }        
     let differenceAmount = totalIncome - taxPayable;
-
+    
     if(differenceAmount <= 1275000 & totalIncome > 1275000 & isSalaried){ 
       let extraAmount = totalIncome - 1275000;
       setTaxPayable(extraAmount);
       setMarginalSalary(taxPayable - extraAmount);
+      const totalTaxBeforeCess = extraAmount + surCharge;
 
-      const cess = extraAmount * 0.04;
+      const cess = totalTaxBeforeCess * 0.04;
       setCess(cess);
-
-      const totalTax = extraAmount + cess;
+      const totalTax = extraAmount + cess + surCharge;
       setTax(totalTax);
       setIncome('');
       setError('');
@@ -92,11 +112,11 @@ const TaxCalculator = () => {
       let extraAmount = totalIncome - 1200000;
       setTaxPayable(extraAmount);
       setMarginalSalary(taxPayable - extraAmount);
-
-      const cess = extraAmount * 0.04;
+      const totalTaxBeforeCess = extraAmount + surCharge;
+      const cess = totalTaxBeforeCess * 0.04;
       setCess(cess);
 
-      const totalTax = extraAmount + cess;
+      const totalTax = extraAmount + cess + surCharge;
       setTax(totalTax);
       setIncome('');
       setError('');
@@ -104,11 +124,11 @@ const TaxCalculator = () => {
     else{
       setTaxPayable(taxPayable);
       setMarginalSalary(0);
-
-      const cess = taxPayable * 0.04;
+      const totalTaxBeforeCess = taxPayable + surCharge;
+      const cess = totalTaxBeforeCess * 0.04;
       setCess(cess);
   
-      const totalTax = taxPayable + cess; 
+      const totalTax = taxPayable + cess + surCharge; 
       setTax(totalTax);
       setIncome('');
       setError('');
@@ -156,7 +176,7 @@ const TaxCalculator = () => {
         placeholder="Enter your salary"
       />
       <button onClick={calculateTax}>Calculate Tax</button>
-
+    
       {error && <p style={{ color: 'red' }}>{error}</p>}
 
       {tax !== null && (
@@ -219,7 +239,11 @@ const TaxCalculator = () => {
               <td><strong>{formatINR(marginalSalary)}</strong></td>
             </tr>
             <tr>
-              <td colSpan="2"><strong>Total Tax </strong></td>
+              <td colSpan="2"><strong>Surcharge </strong></td>
+              <td><strong>{formatINR(surCharge)}</strong></td>
+            </tr>
+            <tr>
+              <td colSpan="2"><strong>Base Tax </strong></td>
               <td><strong>{formatINR(taxPayable)}</strong></td>
             </tr>
             <tr>
