@@ -1,13 +1,12 @@
 /* General Styles */
-
 .App {
   font-family: Arial, sans-serif;
   text-align: center;
   margin-top: 50px;
   padding: 20px;
-  background-color: #f7f7f7;
+  background-color: #FBFBFB;
   border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
   max-width: 800px;
   margin-left: auto;
   margin-right: auto;
@@ -15,9 +14,10 @@
 
 h1 {
   font-size: 2rem;
-  color: #333;
 }
-
+body {
+  background-color: #F8FAFC;
+}
 input {
   width: 80%;
   padding: 10px;
@@ -27,6 +27,7 @@ input {
   border-radius: 4px;
   font-size: 1rem;
   outline: none;
+  background-color: transparent;
 }
 
 input:focus {
@@ -35,16 +36,22 @@ input:focus {
 
 button {
   padding: 10px 20px;
-  background-color: #007bff;
+  background-color: #424769;
   color: #fff;
   border: none;
   border-radius: 4px;
   font-size: 1rem;
 }
+.disclaimer{
+  margin-top: 20px; 
+  font-size: 14px; 
+  color: gray; 
+  opacity: 60%;
+}
 
 button:hover {
   cursor: pointer;
-  background-color: #004085;
+  background-color: #2D3250;
 }
 
 
@@ -72,9 +79,7 @@ th {
   font-weight: bold;
 }
 
-td {
-  background-color: #fff;
-}
+
 
 strong {
   font-weight: bold;

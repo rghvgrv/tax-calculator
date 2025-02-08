@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Analytics } from "@vercel/analytics/react"
+import Confetti from 'react-confetti';
 import './App.css';
 
 const TaxCalculator = () => {
@@ -14,6 +15,7 @@ const TaxCalculator = () => {
   const [marginalSalary, setMarginalSalary] = useState(0);
   const [showTaxFreeMessage, setShowTaxFreeMessage] = useState(false);
   const [showDeductionMessage, setShowDeductionMessage] = useState(false);
+  const [showGraffeti, setShowGraffeti] = useState(false);
 
   const formatINR = (amount) => {
     return amount.toLocaleString('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 });
@@ -31,11 +33,11 @@ const TaxCalculator = () => {
 
   const handleChange = (e) => {
     const rawValue = e.target.value.replace(/[^0-9]/g, ""); // Allow only numbers
-    if (rawValue > 5000000) {
-      alert("Are you kidding me? 😂 , Contact your CA for this !!!");
-      setIncome(""); // Reset input
-      return;
-    }
+    // if (rawValue > 5000000) {
+    //   alert(`You have inputed salary ${rawValue} greater than 50L  `);
+    //   setIncome(""); // Reset input
+    //   return;
+    // }
     setIncome(rawValue);
   };
   
@@ -48,6 +50,15 @@ const TaxCalculator = () => {
       setTax(null);
       setTaxableIncome(null);
       setShowTaxFreeMessage(false);
+      setShowGraffeti(false);
+      return;
+    }
+    if(totalIncome >= 5000000){
+      setError('You have entered more than 50L, we are yet to include surcharge.');
+      setTax(null);
+      setTaxableIncome(null);
+      setShowTaxFreeMessage(false);
+      setShowGraffeti(false);
       return;
     }
 
@@ -113,21 +124,38 @@ const TaxCalculator = () => {
       setIncome('');
       setError('');
     }
-    setShowTaxFreeMessage(
-      (totalIncome <= 1275000 && isSalaried) || (!isSalaried && totalIncome <= 1200000)
-    );
+    setShowTaxFreeMessage(isEligibleForTaxRelief(totalIncome));
+    setShowGraffeti(isEligibleForTaxRelief(totalIncome));
 
     setShowDeductionMessage(isSalaried && totalIncome > 75000);
 
     setFullIncome(parseFloat(income));
   };
 
+  useEffect(() => {
+    if (showGraffeti) {
+      setShowGraffeti(true)
+      setTimeout(() => {
+        setShowGraffeti(false)
+      }, 2500)
+    } else {
+      setShowGraffeti(false);
+    }
+  });
+
+  const isEligibleForTaxRelief = (totalIncome) => {
+    if ((totalIncome <= 1275000 && isSalaried) || (!isSalaried && totalIncome <= 1200000)){
+      return true;
+    }
+    return false;
+  }
+
   return (
     <div className="App">
       <Analytics />
       <h1>Income Tax Calculator 2025-26</h1>
       <div style={{ display: 'flex', justifyContent: 'space-evenly'}}>
-      <label style={{display: 'flex', alignItems: 'center'}}>
+      <label style={{display: 'flex', alignItems: 'center', gap: '10px'}}>
           <input
             type="radio"
             name="employmentType"
@@ -137,7 +165,7 @@ const TaxCalculator = () => {
           />
           Salaried
         </label>
-        <label style={{display: 'flex', alignItems: 'center'}}>
+        <label style={{display: 'flex', alignItems: 'center', gap: '10px'}}>
           <input
             type="radio"
             name="employmentType"
@@ -154,6 +182,7 @@ const TaxCalculator = () => {
         value={formatToINR(income)}
         onChange={handleChange}
         placeholder="Enter your salary"
+        style={{marginRight: '20px'}}
       />
       <button onClick={calculateTax}>Calculate Tax</button>
 
@@ -162,6 +191,13 @@ const TaxCalculator = () => {
       {tax !== null && (
         <table>
           <thead>
+          {showTaxFreeMessage && (
+            <tr>
+              <td colSpan="3" style={{ border: '2px solid #78A083', textAlign: 'center', backgroundColor: '#EAFAEA' }}>
+                <strong>Congrats 🎉</strong> You have to pay 0 Tax
+              </td>
+            </tr>
+          )}
           <tr>
               <td colSpan="2"><strong>Your Income </strong></td>
               <td><strong>{formatINR(fullIncome)}</strong></td>
@@ -229,24 +265,17 @@ const TaxCalculator = () => {
             <tr>
               <td colSpan="2"><strong>Total Tax Payable (Total Tax + Cess)</strong></td>
               <td><strong>{formatINR(tax)}</strong></td>
-            </tr>        
-            {showTaxFreeMessage && (
-            <tr>
-              <td colSpan="3" style={{ color: 'green', border: '2px solid green', textAlign: 'center' }}>
-                <strong>Congrats 🎉</strong> You have to pay 0 Tax
-              </td>
             </tr>
-          )}
           </tbody>
         </table>
       )}
-      <div style={{ marginTop: '20px', fontSize: '14px', color: 'gray' }}>
+      {showGraffeti && <Confetti />}
+      <div className='disclaimer'>
         <ul style={{ paddingLeft: '20px' }}>
         <strong>Disclaimer:</strong><br></br>
           This assumes you're an Indian resident below 60 years of age, who uses the New Tax Regime.<br></br>
           The calculations may not be accurate - use at your own risk.<br></br>
           This tool runs entirely in your browser. No data is stored or shared, and we do not use analytics.<br></br>
-          If your income is over ₹50 LPA,Hoping you have a CA to help you out.<br></br>
         </ul>
       </div>
     </div>
