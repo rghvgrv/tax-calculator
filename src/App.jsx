@@ -155,7 +155,7 @@ const TaxCalculator = () => {
       <Analytics />
       <h1>Income Tax Calculator 2025-26</h1>
       <div style={{ display: 'flex', justifyContent: 'space-evenly'}}>
-      <label style={{display: 'flex', alignItems: 'center'}}>
+      <label style={{display: 'flex', alignItems: 'center', gap: '10px'}}>
           <input
             type="radio"
             name="employmentType"
@@ -165,7 +165,7 @@ const TaxCalculator = () => {
           />
           Salaried
         </label>
-        <label style={{display: 'flex', alignItems: 'center'}}>
+        <label style={{display: 'flex', alignItems: 'center', gap: '10px'}}>
           <input
             type="radio"
             name="employmentType"
