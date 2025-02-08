@@ -137,7 +137,7 @@ const TaxCalculator = () => {
       setShowGraffeti(true)
       setTimeout(() => {
         setShowGraffeti(false)
-      }, 5000)
+      }, 2500)
     } else {
       setShowGraffeti(false);
     }
