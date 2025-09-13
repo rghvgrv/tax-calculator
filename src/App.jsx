@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Analytics } from "@vercel/analytics/react"
 import Confetti from 'react-confetti';
 import './App.css';
 
 const TaxCalculator = () => {
   const [income, setIncome] = useState('');
-  const [fullIncome,setFullIncome] = useState(0);
+  const [fullIncome, setFullIncome] = useState(0);
   const [tax, setTax] = useState(null);
   const [taxableIncome, setTaxableIncome] = useState(null);
   const [cess, setCess] = useState(null);
@@ -40,11 +40,11 @@ const TaxCalculator = () => {
     // }
     setIncome(rawValue);
   };
-  
+
   // Function to calculate tax
   const calculateTax = () => {
     const totalIncome = parseFloat(income);
-    
+
     if (isNaN(totalIncome) || totalIncome <= 0) {
       setError('Please enter a valid income');
       setTax(null);
@@ -53,7 +53,7 @@ const TaxCalculator = () => {
       setShowGraffeti(false);
       return;
     }
-    if(totalIncome >= 5000000){
+    if (totalIncome >= 5000000) {
       setError('You have entered more than 50L, we are yet to include surcharge.');
       setTax(null);
       setTaxableIncome(null);
@@ -63,7 +63,7 @@ const TaxCalculator = () => {
     }
 
     const standardDeduction = isSalaried ? 75000 : 0;
-    const calculatedTaxableIncome = parseInt(income) > 75000  ? totalIncome - standardDeduction : 0;
+    const calculatedTaxableIncome = parseInt(income) > 75000 ? totalIncome - standardDeduction : 0;
     setTaxableIncome(calculatedTaxableIncome);
 
     let taxPayable = 0;
@@ -86,7 +86,7 @@ const TaxCalculator = () => {
 
     let differenceAmount = totalIncome - taxPayable;
 
-    if(differenceAmount <= 1275000 & totalIncome > 1275000 & isSalaried){ 
+    if (differenceAmount <= 1275000 & totalIncome > 1275000 & isSalaried) {
       let extraAmount = totalIncome - 1275000;
       setTaxPayable(extraAmount);
       setMarginalSalary(taxPayable - extraAmount);
@@ -99,7 +99,7 @@ const TaxCalculator = () => {
       setIncome('');
       setError('');
     }
-    else if(differenceAmount <= 1200000 & totalIncome > 1200000 & !isSalaried){
+    else if (differenceAmount <= 1200000 & totalIncome > 1200000 & !isSalaried) {
       let extraAmount = totalIncome - 1200000;
       setTaxPayable(extraAmount);
       setMarginalSalary(taxPayable - extraAmount);
@@ -112,14 +112,14 @@ const TaxCalculator = () => {
       setIncome('');
       setError('');
     }
-    else{
+    else {
       setTaxPayable(taxPayable);
       setMarginalSalary(0);
 
       const cess = taxPayable * 0.04;
       setCess(cess);
-  
-      const totalTax = taxPayable + cess; 
+
+      const totalTax = taxPayable + cess;
       setTax(totalTax);
       setIncome('');
       setError('');
@@ -144,7 +144,7 @@ const TaxCalculator = () => {
   });
 
   const isEligibleForTaxRelief = (totalIncome) => {
-    if ((totalIncome <= 1275000 && isSalaried) || (!isSalaried && totalIncome <= 1200000)){
+    if ((totalIncome <= 1275000 && isSalaried) || (!isSalaried && totalIncome <= 1200000)) {
       return true;
     }
     return false;
@@ -154,8 +154,8 @@ const TaxCalculator = () => {
     <div className="App">
       <Analytics />
       <h1>Income Tax Calculator 2025-26</h1>
-      <div style={{ display: 'flex', justifyContent: 'space-evenly'}}>
-      <label style={{display: 'flex', alignItems: 'center', gap: '10px'}}>
+      <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
+        <label style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <input
             type="radio"
             name="employmentType"
@@ -165,7 +165,7 @@ const TaxCalculator = () => {
           />
           Salaried
         </label>
-        <label style={{display: 'flex', alignItems: 'center', gap: '10px'}}>
+        <label style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <input
             type="radio"
             name="employmentType"
@@ -182,7 +182,7 @@ const TaxCalculator = () => {
         value={formatToINR(income)}
         onChange={handleChange}
         placeholder="Enter your salary"
-        style={{marginRight: '20px'}}
+        style={{ marginRight: '20px' }}
       />
       <button onClick={calculateTax}>Calculate Tax</button>
 
@@ -191,22 +191,22 @@ const TaxCalculator = () => {
       {tax !== null && (
         <table>
           <thead>
-          {showTaxFreeMessage && (
+            {showTaxFreeMessage && (
+              <tr>
+                <td colSpan="3" style={{ border: '2px solid #78A083', textAlign: 'center', backgroundColor: '#EAFAEA' }}>
+                  <strong>Congrats 🎉</strong> You have to pay 0 Tax
+                </td>
+              </tr>
+            )}
             <tr>
-              <td colSpan="3" style={{ border: '2px solid #78A083', textAlign: 'center', backgroundColor: '#EAFAEA' }}>
-                <strong>Congrats 🎉</strong> You have to pay 0 Tax
-              </td>
-            </tr>
-          )}
-          <tr>
               <td colSpan="2"><strong>Your Income </strong></td>
               <td><strong>{formatINR(fullIncome)}</strong></td>
             </tr>
             {showDeductionMessage && (
-          <tr>
-              <td colSpan="2"><strong>Your Taxable Income (Total Income - Standard Deduction) </strong></td>
-              <td><strong>{formatINR(taxableIncome)}</strong></td>
-            </tr>
+              <tr>
+                <td colSpan="2"><strong>Your Taxable Income (Total Income - Standard Deduction) </strong></td>
+                <td><strong>{formatINR(taxableIncome)}</strong></td>
+              </tr>
             )}
             <tr>
               <th>Income Range</th>
@@ -272,8 +272,8 @@ const TaxCalculator = () => {
       {showGraffeti && <Confetti />}
       <div className='disclaimer'>
         <ul style={{ paddingLeft: '20px' }}>
-        <strong>Disclaimer:</strong><br></br>
-          This assumes you're an Indian resident below 60 years of age, who uses the New Tax Regime.<br></br>
+          <strong>Disclaimer:</strong><br></br>
+          This assumes you&apos;re an Indian resident below 60 years of age, who uses the New Tax Regime.<br></br>
           The calculations may not be accurate - use at your own risk.<br></br>
           This tool runs entirely in your browser. No data is stored or shared, and we do not use analytics.<br></br>
         </ul>
