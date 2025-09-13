@@ -36,7 +36,7 @@ jobs:
 
       # Run tests (optional for now)
       - name: Run Tests
-        run: npm test
+        run: npm run test
 
       # Build project (runs only if lint & test pass)
       - name: Build Project
