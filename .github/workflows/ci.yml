@@ -37,7 +37,6 @@ jobs:
       # Run tests (optional for now)
       - name: Run Tests
         run: npm test
-        continue-on-error: true   # safe if you don’t have tests yet
 
       # Build project (runs only if lint & test pass)
       - name: Build Project
