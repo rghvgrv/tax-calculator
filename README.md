@@ -16,7 +16,7 @@ This project is a simple tax calculator built with React and Vite. It allows use
 - npm (v6 or higher)
 
 ### Installation
-
+ 
 1. Clone the repository:
    ``` 
    git clone https://github.com/your-username/tax-calculator.git
