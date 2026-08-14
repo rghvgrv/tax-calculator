@@ -153,9 +153,10 @@ const TaxCalculator = () => {
   return (
     <div className="App">
       <Analytics />
-      <h1>Income Tax Calculator 2025-26</h1>
-      <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
-        <label style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+      <h1>Income Tax Calculator 2026-27</h1>
+      <p className="subtitle">New Tax Regime &middot; FY 2026-27 (AY 2027-28)</p>
+      <div className="segmented">
+        <label>
           <input
             type="radio"
             name="employmentType"
@@ -165,7 +166,7 @@ const TaxCalculator = () => {
           />
           Salaried
         </label>
-        <label style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <label>
           <input
             type="radio"
             name="employmentType"
@@ -176,34 +177,36 @@ const TaxCalculator = () => {
           Non&nbsp;Salaried
         </label>
       </div>
-      <input
-        id="salary"
-        type="text"
-        value={formatToINR(income)}
-        onChange={handleChange}
-        placeholder="Enter your salary"
-        style={{ marginRight: '20px' }}
-      />
-      <button onClick={calculateTax}>Calculate Tax</button>
+      <div className="input-row">
+        <input
+          id="salary"
+          type="text"
+          value={formatToINR(income)}
+          onChange={handleChange}
+          placeholder="Enter your salary"
+        />
+        <button onClick={calculateTax}>Calculate Tax</button>
+      </div>
 
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {error && <p className="error">{error}</p>}
 
       {tax !== null && (
+        <div className="table-wrap">
         <table>
           <thead>
             {showTaxFreeMessage && (
-              <tr>
-                <td colSpan="3" style={{ border: '2px solid #78A083', textAlign: 'center', backgroundColor: '#EAFAEA' }}>
+              <tr className="success-row">
+                <td colSpan="3">
                   <strong>Congrats 🎉</strong> You have to pay 0 Tax
                 </td>
               </tr>
             )}
-            <tr>
+            <tr className="summary-row">
               <td colSpan="2"><strong>Your Income </strong></td>
               <td><strong>{formatINR(fullIncome)}</strong></td>
             </tr>
             {showDeductionMessage && (
-              <tr>
+              <tr className="summary-row">
                 <td colSpan="2"><strong>Your Taxable Income (Total Income - Standard Deduction) </strong></td>
                 <td><strong>{formatINR(taxableIncome)}</strong></td>
               </tr>
@@ -250,32 +253,33 @@ const TaxCalculator = () => {
               <td>30%</td>
               <td>{formatINR(Math.max(0, taxableIncome - 2400000) * 0.30)}</td>
             </tr>
-            <tr>
+            <tr className="summary-row">
               <td colSpan="2"><strong>Marginal Relief </strong></td>
               <td><strong>{formatINR(marginalSalary)}</strong></td>
             </tr>
-            <tr>
+            <tr className="summary-row">
               <td colSpan="2"><strong>Total Tax </strong></td>
               <td><strong>{formatINR(taxPayable)}</strong></td>
             </tr>
-            <tr>
+            <tr className="summary-row">
               <td colSpan="2"><strong>Cess (4%)</strong></td>
               <td><strong>{formatINR(cess)}</strong></td>
             </tr>
-            <tr>
+            <tr className="total-row">
               <td colSpan="2"><strong>Total Tax Payable (Total Tax + Cess)</strong></td>
               <td><strong>{formatINR(tax)}</strong></td>
             </tr>
           </tbody>
         </table>
+        </div>
       )}
       {showGraffeti && <Confetti />}
       <div className='disclaimer'>
-        <ul style={{ paddingLeft: '20px' }}>
-          <strong>Disclaimer:</strong><br></br>
-          This assumes you&apos;re an Indian resident below 60 years of age, who uses the New Tax Regime.<br></br>
-          The calculations may not be accurate - use at your own risk.<br></br>
-          This tool runs entirely in your browser. No data is stored or shared, and we do not use analytics.<br></br>
+        <strong>Disclaimer:</strong>
+        <ul>
+          <li>This assumes you&apos;re an Indian resident below 60 years of age, who uses the New Tax Regime.</li>
+          <li>The calculations may not be accurate - use at your own risk.</li>
+          <li>This tool runs entirely in your browser. No data is stored or shared, and we do not use analytics.</li>
         </ul>
       </div>
     </div>

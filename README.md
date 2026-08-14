@@ -1,6 +1,6 @@
 # Tax Calculator
 
-This project is a simple tax calculator built with React and Vite. It allows users to calculate their income tax based on their total income and employment type (salaried or non-salaried) for the financial year 2025-26.
+This project is a simple tax calculator built with React and Vite. It allows users to calculate their income tax based on their total income and employment type (salaried or non-salaried) for the financial year 2026-27.
 
 ### Features
 

@@ -1,8 +1,57 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+:root {
+  --bg: #f4f6fb;
+  --bg-accent: rgba(99, 102, 241, 0.16);
+  --surface: #ffffff;
+  --surface-alt: #f8fafc;
+  --border: #e6e8f0;
+  --text: #1a1d29;
+  --text-muted: #6b7280;
+  --brand: #4f46e5;
+  --brand-strong: #4338ca;
+  --success-bg: #ecfdf5;
+  --success-border: #6ee7b7;
+  --success-text: #047857;
+  --danger: #dc2626;
+  --danger-bg: #fef2f2;
+  --radius: 16px;
+  --shadow: 0 1px 2px rgba(16, 24, 40, 0.04), 0 12px 32px -12px rgba(16, 24, 40, 0.18);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0d1017;
+    --bg-accent: rgba(129, 140, 248, 0.14);
+    --surface: #161a23;
+    --surface-alt: #1c212c;
+    --border: #272d3a;
+    --text: #e8eaf0;
+    --text-muted: #9aa2b1;
+    --brand: #818cf8;
+    --brand-strong: #6366f1;
+    --success-bg: rgba(16, 185, 129, 0.12);
+    --success-border: #10b981;
+    --success-text: #34d399;
+    --danger: #f87171;
+    --danger-bg: rgba(248, 113, 113, 0.1);
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 16px 40px -16px rgba(0, 0, 0, 0.7);
+  }
+}
+
 * {
-    margin: 0px;
-    padding: 0px;
-    box-sizing: border-box;
-    font-family: "Inter", serif;
-    color: #333333;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Inter", system-ui, sans-serif;
+}
+
+body {
+  min-height: 100vh;
+  color: var(--text);
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(60rem 30rem at 15% -10%, var(--bg-accent), transparent),
+    radial-gradient(50rem 26rem at 95% 0%, var(--bg-accent), transparent);
+  -webkit-font-smoothing: antialiased;
 }
